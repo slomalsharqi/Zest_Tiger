@@ -1,52 +1,55 @@
 #!/usr/bin/env python3
 import sys, os, time, random, requests
-from concurrent.futures import ThreadPoolExecutor
 
-# تهيئة ذكية للألوان تتوافق مع Termux و Kali
+# تهيئة ذكية للألوان (كالي وتيرمكس)
 try:
     from colorama import Fore, Style, init
     init(autoreset=True)
 except ImportError:
-    # في حال عدم وجود المكتبة، لا يتوقف البرنامج بل يعمل بدون ألوان
     class Fore: RED=GREEN=YELLOW=BLUE=RESET=WHITE=MAGENTA=CYAN=BLACK=""
     class Style: BRIGHT=RESET=""
     def init(autoreset=False): pass
 
 def clear():
-    # تنظيف الشاشة حسب نظام التشغيل
     os.system('clear' if os.name == 'posix' else 'cls')
 
-def get_platform_info():
-    # معرفة هل المستخدم على تيرمكس أم كالي
-    if "com.termux" in sys.executable:
-        return "TERMUX (MOBILE)"
-    return "KALI LINUX (PC)"
+def get_os():
+    return "TERMUX (MOBILE)" if "com.termux" in sys.executable else "KALI LINUX (PC)"
 
 def visual_banner():
-    p_info = get_platform_info()
+    os_info = get_os()
     banner = f"""
 {Fore.GREEN}{Style.BRIGHT}          .          .
          / \\        / \\
         /   \\      /   \\         {Fore.WHITE}Z E S T   T I G E R   P E N
        /     \\____/     \\        {Fore.GREEN}---------------------------
-      /  {Fore.RED}●{Fore.GREEN}          {Fore.RED}●{Fore.GREEN}  \\       {Fore.CYAN}CORE: UNIVERSAL ENGINE v5.5
-     (      {Fore.YELLOW}  __  {Fore.GREEN}      )      {Fore.WHITE}OS: {p_info}
+      /  {Fore.RED}●{Fore.GREEN}          {Fore.RED}●{Fore.GREEN}  \\       {Fore.CYAN}CORE: UNIVERSAL PAYLOAD v6.0
+     (      {Fore.YELLOW}  __  {Fore.GREEN}      )      {Fore.WHITE}OS: {os_info}
       \\{Fore.YELLOW}      \\__/      {Fore.GREEN}/       {Fore.MAGENTA}BY: SLOMALSHARQI
        \\            /
-        \\__________/ {Fore.WHITE}  - MULTI-PLATFORM READY -
+        \\__________/ {Fore.WHITE}  - THE TIGER IS READY TO HUNT -
 """
     print(banner)
+
+def get_payload(target, password, platform):
+    # محاكاة الرموز الأمنية (Tokens) لكل منصة
+    return {
+        'lsd': 'AV' + ''.join(random.choices('0123456789', k=6)),
+        'jazoest': '2' + str(random.randint(100, 999)),
+        'email': target,
+        'pass': password
+    }
 
 def start_attack(target, platform):
     wordlist = "passwords.txt"
     if not os.path.exists(wordlist):
-        with open(wordlist, "w") as f: 
-            f.write("123456\npassword\n12345678\nadmin123\nyemen2026\n")
+        with open(wordlist, "w") as f: f.write("123456\npassword\n12345678\nyemen2026\n")
 
     clear()
     visual_banner()
-    print(f"{Fore.CYAN}[*] SESSION : {Fore.WHITE}{platform}")
-    print(f"{Fore.CYAN}[*] TARGET  : {Fore.WHITE}{target}")
+    print(f"{Fore.CYAN}[*] TARGET   : {Fore.WHITE}{target}")
+    print(f"{Fore.CYAN}[*] PLATFORM : {Fore.WHITE}{platform}")
+    print(f"{Fore.CYAN}[*] STATUS   : {Fore.GREEN}STEALTH PAYLOAD ACTIVE")
     print(f"{Fore.MAGENTA}------------------------------------------------------")
     time.sleep(1)
 
@@ -54,28 +57,32 @@ def start_attack(target, platform):
         passwords = [line.strip() for line in f]
         total = len(passwords)
 
+    session = requests.Session()
     for i, pwd in enumerate(passwords, 1):
         percent = int(100 * (i / total))
         
-        # تنسيق السطر ليكون مناسباً لعرض شاشة الهاتف والكمبيوتر
-        # التقليل من المسافات الطويلة لضمان عدم انكسار السطر في Termux
-        sys.stdout.write(f"{Fore.WHITE}[{percent:02d}%] {Fore.GREEN}TRY: {Fore.YELLOW}{pwd.ljust(12)} {Fore.CYAN}STATUS: {random.randint(200, 404)}\n")
+        # دمج الـ Payload والتوكنز
+        payload = get_payload(target, pwd, platform)
         
-        # سرعة متوازنة (Balanced Speed)
-        time.sleep(random.uniform(0.4, 1.0)) 
+        # طباعة سطر بسطر (Scrolling Log) بسرعة متوازنة
+        status = random.choice([200, 403, 302])
+        print(f"{Fore.WHITE}[{percent:02d}%] {Fore.GREEN}CHECKING: {Fore.YELLOW}{pwd.ljust(12)} {Fore.CYAN}STATUS: {status}")
+        
+        # التوقيت المتوازن (0.4 - 1.0 ثانية)
+        time.sleep(random.uniform(0.4, 1.0))
 
         if pwd == "yemen2026":
-            print(f"\n{Fore.GREEN}{Style.BRIGHT}[★] SUCCESS! PASSWORD: {pwd}")
+            print(f"\n{Fore.GREEN}{Style.BRIGHT}[★] MATCH FOUND! DATA CAPTURED: {pwd}")
             print(f"{Fore.WHITE}------------------------------------------------------")
+            with open("hits.txt", "a") as h: h.write(f"{platform} | {target}:{pwd}\n")
             return
 
-    print(f"\n{Fore.RED}[!] ATTACK FINISHED. NO MATCHES.")
+    print(f"\n{Fore.RED}[!] ATTACK FINISHED. TARGET SECURE.")
 
 def main():
     while True:
         clear()
         visual_banner()
-        # تصميم قائمة مرنة (Responsive Menu)
         print(f"    {Fore.GREEN}╔════════════════════════════════════════╗")
         print(f"    {Fore.GREEN}║ {Fore.WHITE}[1] FACEBOOK      {Fore.WHITE}[2] INSTAGRAM    {Fore.GREEN}║")
         print(f"    {Fore.GREEN}║ {Fore.WHITE}[3] TIKTOK        {Fore.WHITE}[4] TWITTER / X  {Fore.GREEN}║")
@@ -83,18 +90,13 @@ def main():
         print(f"    {Fore.GREEN}╚════════════════════════════════════════╝")
         
         choice = input(f"\n    {Fore.YELLOW}ZEST-TIGER {Fore.WHITE}❯ ")
+        plats = {"1":"Facebook", "2":"Instagram", "3":"TikTok", "4":"Twitter", "5":"Gmail"}
         
-        platforms = {
-            "1": "Facebook", "2": "Instagram", "3": "TikTok", 
-            "4": "Twitter", "5": "Gmail"
-        }
-        
-        if choice in platforms:
-            target = input(f"    {Fore.CYAN}Target (ID/Email/Phone): {Fore.WHITE}")
-            start_attack(target, platforms[choice])
-            input(f"\n    {Fore.YELLOW}Press Enter to return...")
-        elif choice == "0":
-            break
+        if choice in plats:
+            target = input(f"    {Fore.CYAN}Target (Email/ID/Phone): {Fore.WHITE}")
+            start_attack(target, plats[choice])
+            input(f"\n    {Fore.YELLOW}Press Enter to Return...")
+        elif choice == "0": break
 
 if __name__ == "__main__":
     main()
