@@ -15,6 +15,7 @@ git clone [https://github.com/slomalsharqi/Zest_Tiger.git](https://github.com/sl
 cd Zest_Tiger
 pip3 install -r requirements.txt
 python3 zest.py
+📱 على تطبيق Termux (Android)
 # تحديث الحزم الأساسية وتثبيت الأدوات
 pkg update && pkg upgrade -y
 pkg install git python -y
