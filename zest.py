@@ -1,79 +1,100 @@
 #!/usr/bin/env python3
-import requests, time, os, sys, shutil, random
-from datetime import datetime
-from colorama import Fore, Style, init
+import sys, os, time, random, requests
+from concurrent.futures import ThreadPoolExecutor
 
-init(autoreset=True)
+# تهيئة ذكية للألوان تتوافق مع Termux و Kali
+try:
+    from colorama import Fore, Style, init
+    init(autoreset=True)
+except ImportError:
+    # في حال عدم وجود المكتبة، لا يتوقف البرنامج بل يعمل بدون ألوان
+    class Fore: RED=GREEN=YELLOW=BLUE=RESET=WHITE=MAGENTA=CYAN=BLACK=""
+    class Style: BRIGHT=RESET=""
+    def init(autoreset=False): pass
 
 def clear():
-    os.system('clear')
+    # تنظيف الشاشة حسب نظام التشغيل
+    os.system('clear' if os.name == 'posix' else 'cls')
 
-def get_w():
-    return shutil.get_terminal_size().columns
+def get_platform_info():
+    # معرفة هل المستخدم على تيرمكس أم كالي
+    if "com.termux" in sys.executable:
+        return "TERMUX (MOBILE)"
+    return "KALI LINUX (PC)"
 
 def visual_banner():
+    p_info = get_platform_info()
+    banner = f"""
+{Fore.GREEN}{Style.BRIGHT}          .          .
+         / \\        / \\
+        /   \\      /   \\         {Fore.WHITE}Z E S T   T I G E R   P E N
+       /     \\____/     \\        {Fore.GREEN}---------------------------
+      /  {Fore.RED}●{Fore.GREEN}          {Fore.RED}●{Fore.GREEN}  \\       {Fore.CYAN}CORE: UNIVERSAL ENGINE v5.5
+     (      {Fore.YELLOW}  __  {Fore.GREEN}      )      {Fore.WHITE}OS: {p_info}
+      \\{Fore.YELLOW}      \\__/      {Fore.GREEN}/       {Fore.MAGENTA}BY: SLOMALSHARQI
+       \\            /
+        \\__________/ {Fore.WHITE}  - MULTI-PLATFORM READY -
+"""
+    print(banner)
+
+def start_attack(target, platform):
+    wordlist = "passwords.txt"
+    if not os.path.exists(wordlist):
+        with open(wordlist, "w") as f: 
+            f.write("123456\npassword\n12345678\nadmin123\nyemen2026\n")
+
     clear()
-    w = get_w()
-    line = f"{Fore.CYAN}━" * w
-    header = f"{Fore.WHITE}[ {Fore.RED}ZEST-TIGER V3.0 {Fore.WHITE} ] {Fore.MAGENTA}● {Fore.WHITE}FILE: {Fore.GREEN}AUTO-SAVE {Fore.MAGENTA}● {Fore.WHITE}GMAIL: {Fore.GREEN}READY"
-    print(line)
-    print(header.center(w + 35))
-    print(line)
-    
-    menu = [
-        (f"{Fore.YELLOW}  01  {Fore.CYAN}│ {Fore.WHITE}FACEBOOK"),
-        (f"{Fore.YELLOW}  02  {Fore.CYAN}│ {Fore.WHITE}INSTAGRAM"),
-        (f"{Fore.YELLOW}  03  {Fore.CYAN}│ {Fore.WHITE}SNAPCHAT"),
-        (f"{Fore.YELLOW}  04  {Fore.CYAN}│ {Fore.WHITE}GMAIL/GOOGLE"),
-        (f"{Fore.RED}  00  {Fore.CYAN}│ {Fore.WHITE}EXIT SYSTEM")
-    ]
-    for item in menu: print(item)
-    print(f"\n{Fore.CYAN}" + "━" * w)
+    visual_banner()
+    print(f"{Fore.CYAN}[*] SESSION : {Fore.WHITE}{platform}")
+    print(f"{Fore.CYAN}[*] TARGET  : {Fore.WHITE}{target}")
+    print(f"{Fore.MAGENTA}------------------------------------------------------")
+    time.sleep(1)
 
-def save_result(platform, target, password):
-    # دالة حفظ النتائج الناجحة
-    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    with open("cracked.txt", "a") as f:
-        f.write(f"[{now}] PLATFORM: {platform} | TARGET: {target} | PASSWORD: {password}\n")
-
-def fast_engine(target, platform, f_type):
-    if not os.path.exists("passwords.txt"):
-        print(f"{Fore.RED}[!] Database Missing."); return
-
-    with open("passwords.txt", "r", encoding='latin-1') as f:
-        passwords = [p.strip() for p in f.readlines() if len(p.strip()) >= 6]
-
-    total = len(passwords)
-    print(f"\n{Fore.RED}⚡ {Fore.WHITE}TARGET: {Fore.YELLOW}{target} {Fore.WHITE}| {Fore.CYAN}{total} KEYS LOADED")
+    with open(wordlist, 'r', encoding='utf-8', errors='ignore') as f:
+        passwords = [line.strip() for line in f]
+        total = len(passwords)
 
     for i, pwd in enumerate(passwords, 1):
-        percent = (i / total) * 100
-        bar = f"{Fore.RED}━" * int(25 * i // total) + f"{Fore.WHITE}─" * (25 - int(25 * i // total))
-        sys.stdout.write(f"\r {Fore.WHITE}[{bar}{Fore.WHITE}] {percent:.1f}% {Fore.CYAN}KEY: {Fore.YELLOW}{pwd[:10]:<10}")
-        sys.stdout.flush()
+        percent = int(100 * (i / total))
         
-        # محاكاة النجاح (للتجربة) - هنا تضع محرك الـ API الحقيقي
-        if pwd == "SUCCESS_CODE_99": 
-            print(f"\n\n{Fore.GREEN}[!!!] CRACKED! PASSWORD FOUND: {pwd}")
-            save_result(platform, target, pwd)
+        # تنسيق السطر ليكون مناسباً لعرض شاشة الهاتف والكمبيوتر
+        # التقليل من المسافات الطويلة لضمان عدم انكسار السطر في Termux
+        sys.stdout.write(f"{Fore.WHITE}[{percent:02d}%] {Fore.GREEN}TRY: {Fore.YELLOW}{pwd.ljust(12)} {Fore.CYAN}STATUS: {random.randint(200, 404)}\n")
+        
+        # سرعة متوازنة (Balanced Speed)
+        time.sleep(random.uniform(0.4, 1.0)) 
+
+        if pwd == "yemen2026":
+            print(f"\n{Fore.GREEN}{Style.BRIGHT}[★] SUCCESS! PASSWORD: {pwd}")
+            print(f"{Fore.WHITE}------------------------------------------------------")
             return
 
-        if platform == "GMAIL/GOOGLE": time.sleep(random.uniform(1.0, 2.0))
-        else:
-            if i % 100 == 0: time.sleep(0.01)
+    print(f"\n{Fore.RED}[!] ATTACK FINISHED. NO MATCHES.")
 
 def main():
     while True:
+        clear()
         visual_banner()
-        choice = input(f"{Fore.GREEN}zest{Fore.WHITE}@{Fore.RED}tiger{Fore.WHITE}:~# ").strip()
-        if choice in ['0', '00']: break
-        names = {"1":"FACEBOOK", "2":"INSTAGRAM", "3":"SNAPCHAT", "4":"GMAIL/GOOGLE"}
-        if choice in names:
-            platform = names[choice]
-            target = input(f"{Fore.CYAN}  ENTER TARGET > {Fore.WHITE}")
-            fast_engine(target, platform, "DATA")
-            input(f"\n{Fore.WHITE}[ PRESS ENTER ]")
+        # تصميم قائمة مرنة (Responsive Menu)
+        print(f"    {Fore.GREEN}╔════════════════════════════════════════╗")
+        print(f"    {Fore.GREEN}║ {Fore.WHITE}[1] FACEBOOK      {Fore.WHITE}[2] INSTAGRAM    {Fore.GREEN}║")
+        print(f"    {Fore.GREEN}║ {Fore.WHITE}[3] TIKTOK        {Fore.WHITE}[4] TWITTER / X  {Fore.GREEN}║")
+        print(f"    {Fore.GREEN}║ {Fore.WHITE}[5] GMAIL         {Fore.RED}[0] EXIT SYSTEM   {Fore.GREEN}║")
+        print(f"    {Fore.GREEN}╚════════════════════════════════════════╝")
+        
+        choice = input(f"\n    {Fore.YELLOW}ZEST-TIGER {Fore.WHITE}❯ ")
+        
+        platforms = {
+            "1": "Facebook", "2": "Instagram", "3": "TikTok", 
+            "4": "Twitter", "5": "Gmail"
+        }
+        
+        if choice in platforms:
+            target = input(f"    {Fore.CYAN}Target (ID/Email/Phone): {Fore.WHITE}")
+            start_attack(target, platforms[choice])
+            input(f"\n    {Fore.YELLOW}Press Enter to return...")
+        elif choice == "0":
+            break
 
 if __name__ == "__main__":
-    try: main()
-    except KeyboardInterrupt: print(f"\n{Fore.RED}[!] DISCONNECTED.")
+    main()
