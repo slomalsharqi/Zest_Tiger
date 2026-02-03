@@ -8,22 +8,18 @@
 
 ## 🚀 تعليمات التثبيت / Installation Guide
 
-### 💻 على نظام Kali Linux (Desktop/Laptop)
+### 💻 أولاً: أوامر التثبيت على Kali Linux
+(انسخ هذه الأوامر إذا كنت تستخدم لابتوب أو نظام لينكس)
 ```bash
 sudo apt update && sudo apt install git python3 -y
 git clone [https://github.com/slomalsharqi/Zest_Tiger.git](https://github.com/slomalsharqi/Zest_Tiger.git)
 cd Zest_Tiger
 pip3 install -r requirements.txt
 python3 zest.py
-📱 على تطبيق Termux (Android)
-# تحديث الحزم الأساسية وتثبيت الأدوات
+📱 ثانياً: أوامر التثبيت على تطبيق Termux
 pkg update && pkg upgrade -y
 pkg install git python -y
-
-# تحميل الأداة من المستودع
 git clone [https://github.com/slomalsharqi/Zest_Tiger.git](https://github.com/slomalsharqi/Zest_Tiger.git)
 cd Zest_Tiger
-
-# تثبيت المكتبات المطلوبة والتشغيل
 pip install colorama requests
 python zest.py
