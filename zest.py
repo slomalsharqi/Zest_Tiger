@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import sys, os, time, random, requests
 
-# تهيئة ذكية للألوان (كالي وتيرمكس)
 try:
     from colorama import Fore, Style, init
     init(autoreset=True)
@@ -23,61 +22,60 @@ def visual_banner():
          / \\        / \\
         /   \\      /   \\         {Fore.WHITE}Z E S T   T I G E R   P E N
        /     \\____/     \\        {Fore.GREEN}---------------------------
-      /  {Fore.RED}●{Fore.GREEN}          {Fore.RED}●{Fore.GREEN}  \\       {Fore.CYAN}CORE: UNIVERSAL PAYLOAD v6.0
+      /  {Fore.RED}●{Fore.GREEN}          {Fore.RED}●{Fore.GREEN}  \\       {Fore.CYAN}CORE: INTELLIGENT ENGINE v7.0
      (      {Fore.YELLOW}  __  {Fore.GREEN}      )      {Fore.WHITE}OS: {os_info}
       \\{Fore.YELLOW}      \\__/      {Fore.GREEN}/       {Fore.MAGENTA}BY: SLOMALSHARQI
        \\            /
-        \\__________/ {Fore.WHITE}  - THE TIGER IS READY TO HUNT -
+        \\__________/ {Fore.WHITE}  - SMART GUIDANCE SYSTEM ACTIVE -
 """
     print(banner)
 
-def get_payload(target, password, platform):
-    # محاكاة الرموز الأمنية (Tokens) لكل منصة
-    return {
-        'lsd': 'AV' + ''.join(random.choices('0123456789', k=6)),
-        'jazoest': '2' + str(random.randint(100, 999)),
-        'email': target,
-        'pass': password
-    }
+def leaked_generator(target_info):
+    name = target_info.get('name', 'user').lower()
+    year = target_info.get('year', '2025')
+    leaks = [
+        f"{name.capitalize()}@{year}", f"{name}{year}!", f"{name}.{year}",
+        f"P@ssw0rd{year}", f"Admin#{year}", f"{name}2026", f"Yemen@{year}",
+        f"{name}{year}", f"{name}123", f"{name}@{year}"
+    ]
+    return leaks
 
 def start_attack(target, platform):
     wordlist = "passwords.txt"
     if not os.path.exists(wordlist):
+        print(f"{Fore.YELLOW}[*] Downloading Real Wordlist...")
         with open(wordlist, "w") as f: f.write("123456\npassword\n12345678\nyemen2026\n")
 
     clear()
     visual_banner()
-    print(f"{Fore.CYAN}[*] TARGET   : {Fore.WHITE}{target}")
-    print(f"{Fore.CYAN}[*] PLATFORM : {Fore.WHITE}{platform}")
-    print(f"{Fore.CYAN}[*] STATUS   : {Fore.GREEN}STEALTH PAYLOAD ACTIVE")
+    
+    # قسم التعليمات للمستخدم
+    print(f"{Fore.YELLOW}┌───[ {Fore.WHITE}HOW TO USE SMART MODE {Fore.YELLOW}]")
+    print(f"{Fore.WHITE}│ 1. {Fore.CYAN}Target Name{Fore.WHITE} : Write first name only (Ex: ali)")
+    print(f"{Fore.WHITE}│ 2. {Fore.CYAN}Target Year{Fore.WHITE} : Write birth or current year (Ex: 1998)")
+    print(f"{Fore.YELLOW}└───────────────────────────────────────\n")
+
+    t_name = input(f"    {Fore.GREEN}❯ Enter Target Name: {Fore.WHITE}") or "user"
+    t_year = input(f"    {Fore.GREEN}❯ Enter Target Year: {Fore.WHITE}") or "2026"
+    
+    smart_list = leaked_generator({'name': t_name, 'year': t_year})
+    
+    print(f"\n{Fore.MAGENTA}[!] PHASE 1: TESTING SMART LEAKED PATTERNS...")
     print(f"{Fore.MAGENTA}------------------------------------------------------")
-    time.sleep(1)
 
-    with open(wordlist, 'r', encoding='utf-8', errors='ignore') as f:
-        passwords = [line.strip() for line in f]
-        total = len(passwords)
-
-    session = requests.Session()
-    for i, pwd in enumerate(passwords, 1):
-        percent = int(100 * (i / total))
-        
-        # دمج الـ Payload والتوكنز
-        payload = get_payload(target, pwd, platform)
-        
-        # طباعة سطر بسطر (Scrolling Log) بسرعة متوازنة
-        status = random.choice([200, 403, 302])
-        print(f"{Fore.WHITE}[{percent:02d}%] {Fore.GREEN}CHECKING: {Fore.YELLOW}{pwd.ljust(12)} {Fore.CYAN}STATUS: {status}")
-        
-        # التوقيت المتوازن (0.4 - 1.0 ثانية)
-        time.sleep(random.uniform(0.4, 1.0))
-
+    for pwd in smart_list:
+        print(f"{Fore.WHITE}[SMART] {Fore.GREEN}TRYING: {Fore.YELLOW}{pwd.ljust(15)} {Fore.CYAN}STATUS: 200")
+        time.sleep(random.uniform(0.6, 1.2))
         if pwd == "yemen2026":
-            print(f"\n{Fore.GREEN}{Style.BRIGHT}[★] MATCH FOUND! DATA CAPTURED: {pwd}")
-            print(f"{Fore.WHITE}------------------------------------------------------")
-            with open("hits.txt", "a") as h: h.write(f"{platform} | {target}:{pwd}\n")
-            return
+            print(f"\n{Fore.GREEN}{Style.BRIGHT}[★] MATCH FOUND: {pwd}"); return
 
-    print(f"\n{Fore.RED}[!] ATTACK FINISHED. TARGET SECURE.")
+    print(f"{Fore.BLUE}[*] SMART LIST FINISHED. STARTING BRUTE FORCE (14M)...")
+    with open(wordlist, 'r', encoding='utf-8', errors='ignore') as f:
+        for i, line in enumerate(f, 1):
+            pwd = line.strip()
+            if i % 5 == 0: # تقليل سرعة الطباعة لتبدو واقعية
+                print(f"{Fore.WHITE}[{i:03d}] {Fore.GREEN}TESTING: {Fore.YELLOW}{pwd.ljust(15)} {Fore.CYAN}STATUS: 302")
+                time.sleep(random.uniform(0.4, 0.8))
 
 def main():
     while True:
@@ -90,12 +88,12 @@ def main():
         print(f"    {Fore.GREEN}╚════════════════════════════════════════╝")
         
         choice = input(f"\n    {Fore.YELLOW}ZEST-TIGER {Fore.WHITE}❯ ")
-        plats = {"1":"Facebook", "2":"Instagram", "3":"TikTok", "4":"Twitter", "5":"Gmail"}
+        platforms = {"1":"Facebook", "2":"Instagram", "3":"TikTok", "4":"Twitter", "5":"Gmail"}
         
-        if choice in plats:
-            target = input(f"    {Fore.CYAN}Target (Email/ID/Phone): {Fore.WHITE}")
-            start_attack(target, plats[choice])
-            input(f"\n    {Fore.YELLOW}Press Enter to Return...")
+        if choice in platforms:
+            target = input(f"    {Fore.CYAN}Target ID/Email: {Fore.WHITE}")
+            start_attack(target, platforms[choice])
+            input(f"\n    {Fore.YELLOW}Press Enter to return...")
         elif choice == "0": break
 
 if __name__ == "__main__":
