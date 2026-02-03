@@ -6,14 +6,6 @@
 
 ---
 
-## ✨ المميزات / Features
-* **Multi-Platform:** دعم كامل لاستهداف (Facebook, Instagram, Snapchat, Gmail).
-* **Intelligent Engine:** نظام "التأخير الذكي" (Smart Delay) لمنع اكتشاف الهجوم.
-* **Auto-Save:** حفظ جميع النتائج الناجحة تلقائياً في ملف `cracked.txt`.
-* **Termux Ready:** مهيأة للعمل بالكامل على الهواتف الذكية.
-
----
-
 ## 🚀 تعليمات التثبيت / Installation Guide
 
 ### 💻 على نظام Kali Linux (Desktop/Laptop)
@@ -23,3 +15,14 @@ git clone [https://github.com/slomalsharqi/Zest_Tiger.git](https://github.com/sl
 cd Zest_Tiger
 pip3 install -r requirements.txt
 python3 zest.py
+# تحديث الحزم الأساسية وتثبيت الأدوات
+pkg update && pkg upgrade -y
+pkg install git python -y
+
+# تحميل الأداة من المستودع
+git clone [https://github.com/slomalsharqi/Zest_Tiger.git](https://github.com/slomalsharqi/Zest_Tiger.git)
+cd Zest_Tiger
+
+# تثبيت المكتبات المطلوبة والتشغيل
+pip install colorama requests
+python zest.py
